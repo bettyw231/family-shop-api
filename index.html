@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏪 Family Shop Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-btn {
+            background: white;
+            border: none;
+            padding: 25px 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .menu-btn .icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .inventory-btn { border-top: 5px solid #4CAF50; }
+        .credit-btn { border-top: 5px solid #FF9800; }
+        .bottles-btn { border-top: 5px solid #2196F3; }
+        .add-btn { border-top: 5px solid #9C27B0; }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 20px;
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-header h2 {
+            color: #333;
+        }
+        
+        .close-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .item-list {
+            margin-top: 20px;
+        }
+        
+        .item-card {
+            background: #f8f9fa;
+            border-left: 5px solid #4CAF50;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        
+        .item-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            color: #ff4444;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .success {
+            color: #4CAF50;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        @media (max-width: 480px) {
+            .menu-grid, .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 Family Shop Manager</h1>
+            <p>Manage inventory, credit, and bottles</p>
+            <div id="connectionStatus" style="margin-top: 10px; font-size: 14px;"></div>
+        </div>
+        
+        <div class="stats-grid" id="statsContainer">
+            <!-- Stats will load here -->
+        </div>
+        
+        <div class="menu-grid">
+            <button class="menu-btn inventory-btn" onclick="openModal('inventoryModal')">
+                <span class="icon">📦</span>
+                Inventory
+            </button>
+            <button class="menu-btn credit-btn" onclick="openModal('creditModal')">
+                <span class="icon">📝</span>
+                Customer Credit
+            </button>
+            <button class="menu-btn bottles-btn" onclick="openModal('bottlesModal')">
+                <span class="icon">🍾</span>
+                Bottle Tracker
+            </button>
+            <button class="menu-btn add-btn" onclick="openModal('addItemModal')">
+                <span class="icon">➕</span>
+                Add Item
+            </button>
+        </div>
+        
+        <div style="text-align: center; color: white; margin-top: 30px; font-size: 14px;">
+            <p>📱 Works on all phones • 💾 Auto-saves • 🔄 Real-time updates</p>
+        </div>
+    </div>
+    
+    <!-- Add Item Modal -->
+    <div id="addItemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Add New Item</h2>
+                <button class="close-btn" onclick="closeModal('addItemModal')">×</button>
+            </div>
+            <form id="addItemForm" onsubmit="event.preventDefault(); addItem();">
+                <div class="form-group">
+                    <label>Item Name *</label>
+                    <input type="text" id="itemName" required placeholder="e.g., Coca-Cola 500ml">
+                </div>
+                <div class="form-group">
+                    <label>Buying Price (₹) *</label>
+                    <input type="number" id="buyingPrice" step="0.01" required placeholder="80.00">
+                </div>
+                <div class="form-group">
+                    <label>Selling Price (₹) *</label>
+                    <input type="number" id="sellingPrice" step="0.01" required placeholder="100.00">
+                </div>
+                <div class="form-group">
+                    <label>Stock Quantity *</label>
+                    <input type="number" id="stock" required placeholder="24">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category">
+                        <option value="Beverages">Beverages</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">💾 Save Item</button>
+                <div id="addItemMessage" class="success" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Inventory Modal -->
+    <div id="inventoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📦 Current Inventory</h2>
+                <button class="close-btn" onclick="closeModal('inventoryModal')">×</button>
+            </div>
+            <button class="submit-btn" onclick="loadInventory()" style="margin-bottom: 20px;">
+                🔄 Refresh
+            </button>
+            <div id="inventoryList" class="loading">
+                Loading items...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Customer Credit Modal -->
+    <div id="creditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Customer Credit</h2>
+                <button class="close-btn" onclick="closeModal('creditModal')">×</button>
+            </div>
+            <button class="submit-btn" onclick="openModal('addCreditModal')" style="margin-bottom: 20px;">
+                ➕ Add Credit Entry
+            </button>
+            <div id="creditList" class="loading">
+                Loading credit records...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottles Tracker Modal -->
+    <div id="bottlesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🍾 Bottle Tracker</h2>
+                <button class="close-btn" onclick="closeModal('bottlesModal')">×</button>
+            </div>
+            <button class="submit-btn" onclick="openModal('addBottleModal')" style="margin-bottom: 20px;">
+                ➕ Record Bottle Taken
+            </button>
+            <div id="bottlesList" class="loading">
+                Loading bottle records...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Credit Modal -->
+    <div id="addCreditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💳 Add Credit Entry</h2>
+                <button class="close-btn" onclick="closeModal('addCreditModal')">×</button>
+            </div>
+            <form id="addCreditForm" onsubmit="event.preventDefault(); addCredit();">
+                <div class="form-group">
+                    <label>Customer Name *</label>
+                    <input type="text" id="customerName" required placeholder="Customer Name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="customerPhone" placeholder="Phone Number">
+                </div>
+                <div class="form-group">
+                    <label>Item Borrowed *</label>
+                    <input type="text" id="creditItem" required placeholder="What was borrowed">
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" id="creditQuantity" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Amount (₹) *</label>
+                    <input type="number" id="creditAmount" step="0.01" required placeholder="Amount">
+                </div>
+                <button type="submit" class="submit-btn">💾 Save Credit Entry</button>
+                <div id="addCreditMessage" class="success" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Add Bottle Modal -->
+    <div id="addBottleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🍾 Record Bottle Taken</h2>
+                <button class="close-btn" onclick="closeModal('addBottleModal')">×</button>
+            </div>
+            <form id="addBottleForm" onsubmit="event.preventDefault(); addBottle();">
+                <div class="form-group">
+                    <label>Customer Name *</label>
+                    <input type="text" id="bottleCustomer" required placeholder="Customer Name">
+                </div>
+                <div class="form-group">
+                    <label>Bottle Type</label>
+                    <select id="bottleType">
+                        <option value="Beer">Beer Bottle</option>
+                        <option value="Soda">Soda Bottle</option>
+                        <option value="Water">Water Bottle</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" id="bottleQuantity" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Deposit Amount (₹)</label>
+                    <input type="number" id="depositAmount" step="0.01" placeholder="Optional">
+                </div>
+                <button type="submit" class="submit-btn">💾 Save Bottle Record</button>
+                <div id="addBottleMessage" class="success" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // CHANGE THIS TO YOUR RENDER URL
+        // Get your Render URL from dashboard and paste here
+        const API_URL = 'https://family-shop-api.onrender.com/api';
+        
+        // Check connection on load
+        window.onload = function() {
+            checkConnection();
+            loadStats();
+        };
+        
+        // Check if API is reachable
+        async function checkConnection() {
+            const statusElement = document.getElementById('connectionStatus');
+            try {
+                const response = await fetch(`${API_URL}/stats`);
+                if (response.ok) {
+                    statusElement.innerHTML = '<span style="color:#4CAF50;">✓ Connected to Server</span>';
+                } else {
+                    statusElement.innerHTML = '<span style="color:#ff9800;">⚠️ Server error</span>';
+                }
+            } catch (error) {
+                statusElement.innerHTML = '<span style="color:#ff4444;">✗ Cannot connect to server</span>';
+                console.log('Server URL should be:', API_URL);
+            }
+        }
+        
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            if (modalId === 'inventoryModal') loadInventory();
+            if (modalId === 'creditModal') loadCredits();
+            if (modalId === 'bottlesModal') loadBottles();
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Load dashboard stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/stats`);
+                const stats = await response.json();
+                
+                document.getElementById('statsContainer').innerHTML = `
+                    <div class="stat-card">
+                        <h3>${stats.total_items}</h3>
+                        <p>Total Items</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${stats.total_customers}</h3>
+                        <p>Customers</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${stats.pending_credits}</h3>
+                        <p>Pending Credits</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${stats.pending_bottles}</h3>
+                        <p>Pending Bottles</p>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('statsContainer').innerHTML = `
+                    <div class="error">
+                        <p>Cannot load stats. Check server connection.</p>
+                        <p>API URL: ${API_URL}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Load inventory items
+        async function loadInventory() {
+            try {
+                const response = await fetch(`${API_URL}/items`);
+                const items = await response.json();
+                
+                const inventoryList = document.getElementById('inventoryList');
+                
+                if (items.length === 0) {
+                    inventoryList.innerHTML = '<p style="text-align:center;color:#666;">No items in inventory.</p>';
+                    return;
+                }
+                
+                inventoryList.innerHTML = items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.name}</h3>
+                        <div class="item-details">
+                            <div><strong>Buy:</strong> ₹${item.buying_price}</div>
+                            <div><strong>Sell:</strong> ₹${item.selling_price}</div>
+                            <div><strong>Stock:</strong> ${item.stock} units</div>
+                            <div><strong>Category:</strong> ${item.category || 'General'}</div>
+                        </div>
+                        <p><small>Updated: ${new Date(item.last_updated).toLocaleDateString()}</small></p>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                document.getElementById('inventoryList').innerHTML = 
+                    '<div class="error">Error loading inventory. Make sure server is running.</div>';
+            }
+        }
+        
+        // Add new item
+        async function addItem() {
+            const itemData = {
+                name: document.getElementById('itemName').value,
+                buying_price: parseFloat(document.getElementById('buyingPrice').value),
+                selling_price: parseFloat(document.getElementById('sellingPrice').value),
+                stock: parseInt(document.getElementById('stock').value),
+                category: document.getElementById('category').value
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/items`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(itemData)
+                });
+                
+                if (response.ok) {
+                    const message = document.getElementById('addItemMessage');
+                    message.textContent = '✅ Item added successfully!';
+                    message.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('itemName').value = '';
+                    document.getElementById('buyingPrice').value = '';
+                    document.getElementById('sellingPrice').value = '';
+                    document.getElementById('stock').value = '';
+                    
+                    // Update stats
+                    loadStats();
+                    
+                    // Hide message after 3 seconds
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                        closeModal('addItemModal');
+                    }, 2000);
+                }
+            } catch (error) {
+                alert('Error adding item: ' + error.message);
+            }
+        }
+        
+        // Load credits
+        async function loadCredits() {
+            try {
+                const response = await fetch(`${API_URL}/credits`);
+                const credits = await response.json();
+                
+                const creditList = document.getElementById('creditList');
+                
+                if (credits.length === 0) {
+                    creditList.innerHTML = '<p style="text-align:center;color:#666;">No credit records.</p>';
+                    return;
+                }
+                
+                creditList.innerHTML = credits.map(credit => `
+                    <div class="item-card" style="border-left-color: ${credit.paid ? '#4CAF50' : '#FF9800'};">
+                        <h3>${credit.customer_name || 'Unknown Customer'}</h3>
+                        <div class="item-details">
+                            <div><strong>Item:</strong> ${credit.item_name}</div>
+                            <div><strong>Amount:</strong> ₹${credit.amount}</div>
+                            <div><strong>Status:</strong> ${credit.paid ? 'Paid ✓' : 'Unpaid'}</div>
+                            <div><strong>Date:</strong> ${new Date(credit.transaction_date).toLocaleDateString()}</div>
+                        </div>
+                        ${credit.notes ? `<p><strong>Notes:</strong> ${credit.notes}</p>` : ''}
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                document.getElementById('creditList').innerHTML = 
+                    '<div class="error">Error loading credits.</div>';
+            }
+        }
+        
+        // Add credit entry
+        async function addCredit() {
+            const creditData = {
+                customer_id: 1, // For now, using ID 1
+                item_name: document.getElementById('creditItem').value,
+                quantity: parseInt(document.getElementById('creditQuantity').value) || 1,
+                amount: parseFloat(document.getElementById('creditAmount').value),
+                notes: `Customer: ${document.getElementById('customerName').value}, Phone: ${document.getElementById('customerPhone').value}`
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/credits`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(creditData)
+                });
+                
+                if (response.ok) {
+                    const message = document.getElementById('addCreditMessage');
+                    message.textContent = '✅ Credit entry saved!';
+                    message.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('customerName').value = '';
+                    document.getElementById('customerPhone').value = '';
+                    document.getElementById('creditItem').value = '';
+                    document.getElementById('creditAmount').value = '';
+                    
+                    // Update stats
+                    loadStats();
+                    
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                        closeModal('addCreditModal');
+                        loadCredits();
+                    }, 2000);
+                }
+            } catch (error) {
+                alert('Error saving credit: ' + error.message);
+            }
+        }
+        
+        // Load bottles
+        async function loadBottles() {
+            try {
+                const response = await fetch(`${API_URL}/bottles`);
+                const bottles = await response.json();
+                
+                const bottlesList = document.getElementById('bottlesList');
+                
+                if (bottles.length === 0) {
+                    bottlesList.innerHTML = '<p style="text-align:center;color:#666;">No bottle records.</p>';
+                    return;
+                }
+                
+                bottlesList.innerHTML = bottles.map(bottle => `
+                    <div class="item-card" style="border-left-color: ${bottle.returned ? '#4CAF50' : '#2196F3'};">
+                        <h3>${bottle.customer_name || 'Unknown Customer'}</h3>
+                        <div class="item-details">
+                            <div><strong>Type:</strong> ${bottle.bottle_type}</div>
+                            <div><strong>Quantity:</strong> ${bottle.quantity}</div>
+                            <div><strong>Status:</strong> ${bottle.returned ? 'Returned ✓' : 'Pending'}</div>
+                            <div><strong>Taken:</strong> ${new Date(bottle.taken_date).toLocaleDateString()}</div>
+                        </div>
+                        ${bottle.deposit_amount ? `<p><strong>Deposit:</strong> ₹${bottle.deposit_amount}</p>` : ''}
+                        <button class="submit-btn" onclick="returnBottle(${bottle.id})" 
+                                ${bottle.returned ? 'disabled style="opacity:0.5;"' : ''}>
+                            ${bottle.returned ? '✅ Returned' : '✓ Mark as Returned'}
+                        </button>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                document.getElementById('bottlesList').innerHTML = 
+                    '<div class="error">Error loading bottle records.</div>';
+            }
+        }
+        
+        // Add bottle record
+        async function addBottle() {
+            const bottleData = {
+                customer_id: 1, // For now, using ID 1
+                bottle_type: document.getElementById('bottleType').value,
+                quantity: parseInt(document.getElementById('bottleQuantity').value) || 1,
+                deposit_amount: parseFloat(document.getElementById('depositAmount').value) || 0,
+                notes: `Customer: ${document.getElementById('bottleCustomer').value}`
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/bottles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bottleData)
+                });
+                
+                if (response.ok) {
+                    const message = document.getElementById('addBottleMessage');
+                    message.textContent = '✅ Bottle record saved!';
+                    message.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('bottleCustomer').value = '';
+                    document.getElementById('bottleQuantity').value = '1';
+                    document.getElementById('depositAmount').value = '';
+                    
+                    // Update stats
+                    loadStats();
+                    
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                        closeModal('addBottleModal');
+                        loadBottles();
+                    }, 2000);
+                }
+            } catch (error) {
+                alert('Error saving bottle record: ' + error.message);
+            }
+        }
+        
+        // Mark bottle as returned
+        async function returnBottle(bottleId) {
+            try {
+                const response = await fetch(`${API_URL}/bottles/${bottleId}/return`, {
+                    method: 'PUT'
+                });
+                
+                if (response.ok) {
+                    loadBottles();
+                    loadStats();
+                }
+            } catch (error) {
+                alert('Error updating bottle: ' + error.message);
+            }
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 

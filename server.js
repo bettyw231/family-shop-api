@@ -160,21 +160,47 @@ app.put('/api/credits/:id/pay', async (req, res) => {
   }
 });
 
-// 4. BOTTLES ROUTES (For returnable bottles)
-// 4. BOTTLES ROUTES (Fixed version)
+// ============ BOTTLES ROUTES - COMPLETE WORKING VERSION ============
+
+// GET all bottles (pending and returned)
+app.get('/api/bottles', async (req, res) => {
+  console.log('GET /api/bottles called');
+  try {
+    const result = await pool.query(`
+      SELECT b.*, 
+             COALESCE(c.name, 'Unknown') as customer_name,
+             c.phone
+      FROM bottles b
+      LEFT JOIN customers c ON b.customer_id = c.id
+      ORDER BY b.taken_date DESC
+    `);
+    console.log(`Found ${result.rows.length} bottles`);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('GET bottles error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST new bottle
 app.post('/api/bottles', async (req, res) => {
+  console.log('POST /api/bottles called with body:', req.body);
   try {
     const { customer_id, bottle_type, quantity, deposit_amount, notes } = req.body;
     
-    // Validate required fields
-    if (!customer_id || !bottle_type) {
-      return res.status(400).json({ error: 'Customer ID and bottle type are required' });
+    // Validate
+    if (!customer_id) {
+      return res.status(400).json({ error: 'customer_id is required' });
     }
-
+    if (!bottle_type) {
+      return res.status(400).json({ error: 'bottle_type is required' });
+    }
+    
     const result = await pool.query(
       `INSERT INTO bottles 
-       (customer_id, bottle_type, quantity, deposit_amount, notes) 
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+       (customer_id, bottle_type, quantity, deposit_amount, notes, taken_date, returned) 
+       VALUES ($1, $2, $3, $4, $5, CURRENT_DATE, false) 
+       RETURNING *`,
       [
         customer_id, 
         bottle_type, 
@@ -184,42 +210,35 @@ app.post('/api/bottles', async (req, res) => {
       ]
     );
     
+    console.log('Bottle saved:', result.rows[0]);
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error('Error saving bottle:', err.message);
+    console.error('POST bottles error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-app.post('/api/bottles', async (req, res) => {
-  try {
-    const { customer_id, bottle_type, quantity, deposit_amount, notes } = req.body;
-    
-    const result = await pool.query(
-      `INSERT INTO bottles 
-       (customer_id, bottle_type, quantity, deposit_amount, notes) 
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [customer_id, bottle_type, quantity, deposit_amount, notes]
-    );
-    
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
+// PUT - mark bottle as returned
 app.put('/api/bottles/:id/return', async (req, res) => {
+  console.log('PUT /api/bottles/return called for id:', req.params.id);
   try {
     const { id } = req.params;
     
     const result = await pool.query(
-      `UPDATE bottles SET returned = true, returned_date = CURRENT_DATE 
+      `UPDATE bottles 
+       SET returned = true, returned_date = CURRENT_DATE 
        WHERE id = $1 RETURNING *`,
       [id]
     );
     
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Bottle not found' });
+    }
+    
+    console.log('Bottle marked returned:', result.rows[0]);
     res.json(result.rows[0]);
   } catch (err) {
+    console.error('PUT bottles error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });

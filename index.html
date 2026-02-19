@@ -91,6 +91,24 @@
             margin-bottom: 20px;
             cursor: pointer;
         }
+
+        .item-card.paid {
+            opacity: 0.8;
+            background: #f0f7f0;
+        }
+
+        .item-card.overdue {
+            background: #fff0f0;
+        }
+
+        .small-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+        }
         
 
         .form-group {
@@ -192,7 +210,7 @@
         <!-- Inventory Page -->
         <div id="inventoryPage" class="section">
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
-            <h2>📦 እተኸውን ዘሎ</h2>
+            <h2>📦 ሐዚ ዘሎ</h2>
             <button class="action-btn" style="background: #3498db;" onclick="loadInventory()">🔄 SAVE</button>
             <div id="inventoryList" class="warning">ይፀበዩ...</div>
         </div>
@@ -214,6 +232,11 @@
             <h2>📝 ልቓሕ</h2>
             <button class="action-btn" style="background: #e67e22;" onclick="showPage('addCredit')">➕ ሓድሽ ልቓሕ</button>
             <div id="creditList" class="warning">ይፀበዩ...</div>
+            <div class="simple-tabs">
+                <button class="simple-tab active" onclick="loadCredits('unpaid')">ዘይተኸፈለ</button>
+                <button class="simple-tab" onclick="loadCredits('paid')">ዝተኸፈለ</button>
+                <button class="simple-tab" onclick="loadCredits('all')">ኩሉ</button>
+            </div>
         </div>
 
         <!-- Bottles Page -->
@@ -466,36 +489,90 @@
         }
 
         // Load credits
-        async function loadCredits() {
-            const list = document.getElementById('creditList');
-            list.innerHTML = 'ይፀበዩ...';
+        // Load credits with filtering (paid/unpaid/all)
+        async function loadCredits(type = 'unpaid') {
+            const listDiv = document.getElementById('creditList');
+            listDiv.innerHTML = '<div class="warning">ይጽበዩ...</div>';
+            
+            // Update active tab
+            document.querySelectorAll('#creditSection .simple-tab').forEach(t => t.classList.remove('active'));
+            if (event) event.target.classList.add('active');
+            else {
+                // Set active tab based on type
+                document.querySelectorAll('#creditSection .simple-tab').forEach((tab, index) => {
+                    if ((type === 'unpaid' && index === 0) ||
+                        (type === 'paid' && index === 1) ||
+                        (type === 'all' && index === 2)) {
+                        tab.classList.add('active');
+                    }
+                });
+            }
             
             try {
-                const response = await fetch(API_URL + '/credits');
-                const credits = await response.json();
-                const unpaid = credits.filter(c => !c.paid);
+                const response = await fetch(`${API_URL}/credits`);
+                let credits = await response.json();
                 
-                if (unpaid.length === 0) {
-                    list.innerHTML = 'ልቓሕ የለን';
+                // Filter based on type
+                const today = new Date();
+                if (type === 'unpaid') {
+                    credits = credits.filter(c => !c.paid);
+                } else if (type === 'paid') {
+                    credits = credits.filter(c => c.paid);
+                }
+                // 'all' shows everything
+                
+                if (credits.length === 0) {
+                    if (type === 'unpaid') listDiv.innerHTML = '<div class="warning">ሽቁርቓር የለን</div>';
+                    else if (type === 'paid') listDiv.innerHTML = '<div class="warning">ገና ዝተኸፈለ የለን</div>';
+                    else listDiv.innerHTML = '<div class="warning">ኩሉ ቦታ ባዶ እዩ</div>';
                     return;
                 }
                 
                 let html = '';
-                unpaid.forEach(c => {
+                credits.forEach(credit => {
+                    const dueDate = credit.due_date ? new Date(credit.due_date) : null;
+                    const isOverdue = dueDate && dueDate < today && !credit.paid;
+                    
+                    // Different styling based on status
+                    let cardClass = 'item-card';
+                    if (credit.paid) cardClass += ' paid';
+                    else if (isOverdue) cardClass += ' overdue';
+                    
                     html += `
-                        <div class="item-card">
-                            <div class="item-name">${c.customer_name || 'ዘይፍለጥ'}</div>
-                            <div class="item-details">
-                                <div>📦 ${c.item_name}</div>
-                                <div>💰 ${c.amount} ብር</div>
+                        <div class="${cardClass}" style="border-left-color: ${credit.paid ? '#27ae60' : (isOverdue ? '#e74c3c' : '#f39c12')};">
+                            <div class="item-name">
+                                ${credit.customer_name || 'ዘይፍለጥ'}
+                                ${credit.paid ? ' <span style="color:#27ae60; font-size:14px;">✅ ተኸፊሉ</span>' : ''}
                             </div>
-                            <button onclick="markAsPaid(${c.id})" style="margin-top:10px; padding:5px 10px;">✓ ከፊሉ</button>
+                            <div class="item-details">
+                                <div>📦 እተኸውን: ${credit.item_name}</div>
+                                <div>💰 ብር: ${credit.amount}</div>
+                                <div>📅 ዝተወሰደሉ: ${new Date(credit.transaction_date).toLocaleDateString()}</div>
+                                ${credit.paid ? 
+                                    `<div>✅ ዝተኸፈለሉ: ${credit.paid_date ? new Date(credit.paid_date).toLocaleDateString() : 'ዘይፍለጥ'}</div>` : 
+                                    (dueDate ? `<div>⏳ ክኸፍል: ${dueDate.toLocaleDateString()} ${isOverdue ? '<span style="color:#e74c3c;"> (ዝሓለፈ)</span>' : ''}</div>` : '')
+                                }
+                            </div>
+                            ${!credit.paid ? `
+                            <div style="margin-top: 10px;">
+                                <button class="small-btn" style="background:#27ae60; color:white;" 
+                                        onclick="markAsPaid(${credit.id})">
+                                    ✓ ከፊሉ ምልክት ግበር
+                                </button>
+                            </div>
+                            ` : `
+                            <div style="margin-top: 10px; font-size:12px; color:#666;">
+                                🕒 ተኸፊሉ
+                            </div>
+                            `}
                         </div>
                     `;
                 });
-                list.innerHTML = html;
+                
+                listDiv.innerHTML = html;
+                
             } catch (error) {
-                list.innerHTML = 'ጌጋ: ' + error.message;
+                listDiv.innerHTML = '<div class="warning">ጌጋ: ' + error.message + '</div>';
             }
         }
 
@@ -695,12 +772,27 @@
 
         // Mark as paid
         async function markAsPaid(creditId) {
-            if (!confirm('ከፊሉ እዩ?')) return;
+            if (!confirm('እዚ ሰብ ከፊሉ እዩ?')) return;
             
             try {
-                await fetch(API_URL + '/credits/' + creditId + '/pay', {method: 'PUT'});
-                alert('✅ ተኸፊሉ');
-                loadCredits();
+                const response = await fetch(`${API_URL}/credits/${creditId}/pay`, {
+                    method: 'PUT'
+                });
+                
+                if (response.ok) {
+                    alert('✅ ተኸፊሉ ምልክት ተገይሩ!');
+                    // Reload current tab
+                    const activeTab = document.querySelector('#creditSection .simple-tab.active');
+                    if (activeTab) {
+                        const tabText = activeTab.textContent;
+                        if (tabText.includes('ዘይተኸፈለ')) loadCredits('unpaid');
+                        else if (tabText.includes('ዝተኸፈለ')) loadCredits('paid');
+                        else loadCredits('all');
+                    } else {
+                        loadCredits('unpaid');
+                    }
+                    loadQuickStats();
+                }
             } catch (error) {
                 alert('ሽጋራ: ' + error.message);
             }

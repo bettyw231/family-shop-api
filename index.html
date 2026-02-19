@@ -168,15 +168,15 @@
             <div class="menu-grid">
                 <button class="menu-btn btn-green" onclick="showPage('inventory')">
                     <span class="icon">📦</span>
-                    እተኸውን
+                    ኣታዊ
                 </button>
                 <button class="menu-btn btn-blue" onclick="showPage('customers')">
                     <span class="icon">👥</span>
-                    ዓሚልቲ
+                    ዓማዊል
                 </button>
                 <button class="menu-btn btn-orange" onclick="showPage('credit')">
                     <span class="icon">📝</span>
-                    ሽቁርቓር
+                    ልቓሓት
                 </button>
                 <button class="menu-btn btn-purple" onclick="showPage('bottles')">
                     <span class="icon">🍾</span>
@@ -184,7 +184,7 @@
                 </button>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button class="action-btn" style="background: #3498db;" onclick="showPage('addItem')">➕ ሓድሽ እተኸውን</button>
+                <button class="action-btn" style="background: #3498db;" onclick="showPage('addItem')">➕ ሓድሽ ኣታዊ</button>
                 <button class="action-btn" style="background: #9b59b6;" onclick="showPage('addCustomer')">👤 ሓድሽ ዓሚል</button>
             </div>
         </div>
@@ -193,27 +193,27 @@
         <div id="inventoryPage" class="section">
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
             <h2>📦 እተኸውን ዘሎ</h2>
-            <button class="action-btn" style="background: #3498db;" onclick="loadInventory()">🔄 ኣሓድስ</button>
-            <div id="inventoryList" class="warning">ይጽበዩ...</div>
+            <button class="action-btn" style="background: #3498db;" onclick="loadInventory()">🔄 SAVE</button>
+            <div id="inventoryList" class="warning">ይፀበዩ...</div>
         </div>
 
         <!-- Customers Page -->
         <div id="customersPage" class="section">
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
-            <h2>👥 ዓሚልቲ</h2>
+            <h2>👥 ዓማዊል</h2>
             <div style="display: flex; gap: 10px; margin: 10px 0;">
                 <button class="action-btn" style="background: #27ae60;" onclick="loadCustomers('regular')">ወትሩ</button>
                 <button class="action-btn" style="background: #e67e22;" onclick="loadCustomers('occasional')">ሓደ ግዜ</button>
             </div>
-            <div id="customersList" class="warning">ይጽበዩ...</div>
+            <div id="customersList" class="warning">ይፀበዩ...</div>
         </div>
 
         <!-- Credit Page -->
         <div id="creditPage" class="section">
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
-            <h2>📝 ሽቁርቓር</h2>
-            <button class="action-btn" style="background: #e67e22;" onclick="showPage('addCredit')">➕ ሓድሽ ሽቁርቓር</button>
-            <div id="creditList" class="warning">ይጽበዩ...</div>
+            <h2>📝 ልቓሕ</h2>
+            <button class="action-btn" style="background: #e67e22;" onclick="showPage('addCredit')">➕ ሓድሽ ልቓሕ</button>
+            <div id="creditList" class="warning">ይፀበዩ...</div>
         </div>
 
         <!-- Bottles Page -->
@@ -221,16 +221,16 @@
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
             <h2>🍾 ጥርሙዝ</h2>
             <button class="action-btn" style="background: #8e44ad;" onclick="showPage('addBottle')">➕ ሓድሽ</button>
-            <div id="bottlesList" class="warning">ይጽበዩ...</div>
+            <div id="bottlesList" class="warning">ይፀበዩ...</div>
         </div>
 
         <!-- Add Item Page -->
         <div id="addItemPage" class="section">
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
-            <h2>➕ ሓድሽ እተኸውን</h2>
+            <h2>➕ ሓድሽ ኣታዊ</h2>
             <form onsubmit="event.preventDefault(); saveItem();">
                 <div class="form-group">
-                    <label>ሽም እተኸውን</label>
+                    <label>ሽም ኣታዊ</label>
                     <input type="text" id="itemName" required>
                 </div>
 
@@ -245,10 +245,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label>ክንደይ ኣለካ?</label>
+                    <label>በዝሒ?</label>
                     <input type="number" id="stock" required>
                 </div>
-                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
+                <button type="submit" class="action-btn">💾 SAVE</button>
             </form>
             <div id="addItemMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
@@ -264,18 +264,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label>ቁጽሪ ተሌፎን</label>
+                    <label>ቁፅሪ ስልኪ</label>
                     <input type="tel" id="customerPhone">
                 </div>
 
                 <div class="form-group">
                     <label>ዓይነት ዓሚል</label>
                     <select id="customerType">
-                        <option value="regular">ወትሩ ዝሽርቕ</option>
-                        <option value="occasional">ሓደ ግዜ ዝሽርቕ</option>
+                        <option value="regular">ወትሩ ዝልቃሕ</option>
+                        <option value="occasional">ሓደ ግዜ ዝልቃሕ</option>
                     </select>
                 </div>
-                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
+                <button type="submit" class="action-btn">💾 SAVE</button>
             </form>
             <div id="addCustomerMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
@@ -283,10 +283,10 @@
         <!-- Add Credit Page -->
         <div id="addCreditPage" class="section">
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
-            <h2>➕ ሓድሽ ሽቁርቓር</h2>
+            <h2>➕ ሓድሽ ልቓሕ</h2>
             <form onsubmit="event.preventDefault(); saveCredit();">
                 <div class="form-group">
-                    <label>መረፅ ዓሚል</label>
+                    <label>ዓሚል ምረፅ</label>
                     <select id="creditCustomer" required>
                         <option value="">ምረፅ...</option>
                     </select>
@@ -309,7 +309,7 @@
                 
                 </div>
 
-                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
+                <button type="submit" class="action-btn">💾 SAVE</button>
             </form>
             <div id="addCreditMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
@@ -329,11 +329,18 @@
 
                     <select id="bottleType">
                     
-                        <option value="ቢራ">ቢራ</option>
+                        <option value="ካስትል">ካስትል</option>
                     
-                        <option value="ማይ">ማይ</option>
-                    
+                        <option value="በደሌ">በደሌ</option>
+
+                        <option value="ሐረር">ሐረር</option>
+
+                        <option value="ኮካ">ኮካ</option>
+
+                        <option value="ምሪንዳ">ምሪንዳ</option>
+
                         <option value="ካልእ">ካልእ</option>
+
                     </select>
                 </div>
 
@@ -341,7 +348,7 @@
                     <label>ክንደይ ጥርሙዝ?</label>
                     <input type="number" id="bottleQuantity" value="1">
                 </div>
-                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
+                <button type="submit" class="action-btn">💾 SAVE</button>
             </form>
             <div id="addBottleMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
@@ -390,7 +397,7 @@
         // Load inventory
         async function loadInventory() {
             const list = document.getElementById('inventoryList');
-            list.innerHTML = 'ይጽበዩ...';
+            list.innerHTML = 'ይፀበዩ...';
             list.className = 'warning';
             
             try {
@@ -398,7 +405,7 @@
                 const items = await response.json();
                 
                 if (items.length === 0) {
-                    list.innerHTML = 'እተኸውን የለን';
+                    list.innerHTML = 'ኣታዊ የለን';
                     return;
                 }
                 
@@ -408,9 +415,9 @@
                         <div class="item-card">
                             <div class="item-name">${item.name}</div>
                             <div class="item-details">
-                                <div>💰 ገዛኽዎ: ${item.buying_price} ብር</div>
-                                <div>💵 ክትሸጥ: ${item.selling_price} ብር</div>
-                                <div>📦 ዘሎካ: ${item.stock}</div>
+                                <div>💰 ዝገዛኽዎ: ${item.buying_price} ብር</div>
+                                <div>💵 ዝሽየጠሉ: ${item.selling_price} ብር</div>
+                                <div>📦 ዘሎና: ${item.stock}</div>
                             </div>
                         </div>
                     `;
@@ -425,7 +432,7 @@
         // Load customers
         async function loadCustomers(type) {
             const list = document.getElementById('customersList');
-            list.innerHTML = 'ይጽበዩ...';
+            list.innerHTML = 'ይፀበዩ...';
             
             try {
                 const response = await fetch(API_URL + '/customers');
@@ -436,7 +443,7 @@
                 }
                 
                 if (customers.length === 0) {
-                    list.innerHTML = 'ዓሚልቲ የለዉን';
+                    list.innerHTML = 'ዓሚል የለዉን';
                     return;
                 }
                 
@@ -461,7 +468,7 @@
         // Load credits
         async function loadCredits() {
             const list = document.getElementById('creditList');
-            list.innerHTML = 'ይጽበዩ...';
+            list.innerHTML = 'ይፀበዩ...';
             
             try {
                 const response = await fetch(API_URL + '/credits');
@@ -469,7 +476,7 @@
                 const unpaid = credits.filter(c => !c.paid);
                 
                 if (unpaid.length === 0) {
-                    list.innerHTML = 'ሽቁርቓር የለን';
+                    list.innerHTML = 'ልቓሕ የለን';
                     return;
                 }
                 
@@ -495,7 +502,7 @@
         // Load bottles
         async function loadBottles() {
             const list = document.getElementById('bottlesList');
-            list.innerHTML = 'ይጽበዩ...';
+            list.innerHTML = 'ይፀበዩ...';
             
             try {
                 const response = await fetch(API_URL + '/bottles');

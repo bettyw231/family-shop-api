@@ -161,17 +161,32 @@ app.put('/api/credits/:id/pay', async (req, res) => {
 });
 
 // 4. BOTTLES ROUTES (For returnable bottles)
-app.get('/api/bottles', async (req, res) => {
+// 4. BOTTLES ROUTES (Fixed version)
+app.post('/api/bottles', async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT b.*, c.name as customer_name, c.phone 
-      FROM bottles b
-      LEFT JOIN customers c ON b.customer_id = c.id
-      WHERE b.returned = false
-      ORDER BY b.taken_date DESC
-    `);
-    res.json(result.rows);
+    const { customer_id, bottle_type, quantity, deposit_amount, notes } = req.body;
+    
+    // Validate required fields
+    if (!customer_id || !bottle_type) {
+      return res.status(400).json({ error: 'Customer ID and bottle type are required' });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO bottles 
+       (customer_id, bottle_type, quantity, deposit_amount, notes) 
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [
+        customer_id, 
+        bottle_type, 
+        quantity || 1, 
+        deposit_amount || 0, 
+        notes || ''
+      ]
+    );
+    
+    res.status(201).json(result.rows[0]);
   } catch (err) {
+    console.error('Error saving bottle:', err.message);
     res.status(500).json({ error: err.message });
   }
 });

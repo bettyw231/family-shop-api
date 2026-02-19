@@ -267,27 +267,6 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 
-// TEMPORARY ROUTE: Clear all data (ADD THIS TO server.js)
-app.get('/api/clear-all-data', async (req, res) => {
-  try {
-    // Delete in correct order (respect foreign keys)
-    await pool.query('DELETE FROM bottles;');
-    await pool.query('DELETE FROM credit_transactions;');
-    await pool.query('DELETE FROM customers;');
-    await pool.query('DELETE FROM items;');
-    
-    // Reset sequences (IDs start from 1 again)
-    await pool.query('ALTER SEQUENCE bottles_id_seq RESTART WITH 1;');
-    await pool.query('ALTER SEQUENCE credit_transactions_id_seq RESTART WITH 1;');
-    await pool.query('ALTER SEQUENCE customers_id_seq RESTART WITH 1;');
-    await pool.query('ALTER SEQUENCE items_id_seq RESTART WITH 1;');
-    
-    res.json({ message: '✅ All data cleared! Starting fresh.' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // Root route
 app.get('/', (req, res) => {
   res.json({

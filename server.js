@@ -163,27 +163,6 @@ app.put('/api/credits/:id/pay', async (req, res) => {
 // ============ BOTTLES ROUTES - COMPLETE WORKING VERSION ============
 
 // GET all bottles (pending and returned)
-// TEMPORARY ROUTE: Create bottles table
-app.get('/api/create-bottles-table', async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS bottles (
-        id SERIAL PRIMARY KEY,
-        customer_id INTEGER REFERENCES customers(id),
-        bottle_type VARCHAR(50) NOT NULL,
-        quantity INTEGER DEFAULT 1,
-        taken_date DATE DEFAULT CURRENT_DATE,
-        returned BOOLEAN DEFAULT FALSE,
-        returned_date DATE,
-        deposit_amount DECIMAL(10,2) DEFAULT 0,
-        notes TEXT
-      );
-    `);
-    res.json({ message: '✅ Bottles table created or already exists' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 app.get('/api/bottles', async (req, res) => {
   console.log('GET /api/bottles called');

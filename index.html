@@ -2,972 +2,567 @@
 <html lang="ti">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
-    <title>ማህደረ ድኳን ናይ ኣደይ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ድኳን ናይ ኣደይ</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Noto Sans Ethiopic', Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-        
+
         body {
-            background: #f0f8ff;
-            min-height: 100vh;
+            background: #f0f2f5;
             padding: 15px;
         }
-        
+
         .container {
             max-width: 500px;
             margin: 0 auto;
         }
-        
-        /* HEADER - Shop Name */
-        .shop-header {
+        .header {
             background: #2c3e50;
             color: white;
-            padding: 25px 15px;
-            border-radius: 30px 30px 30px 30px;
+            padding: 20px;
+            border-radius: 15px;
             margin-bottom: 20px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+
         }
-        
-        .shop-name {
-            font-size: 32px;
-            font-weight: bold;
+        .header h1 {
+            font-size: 24px;
             margin-bottom: 5px;
         }
-        
-        .shop-name small {
-            font-size: 18px;
-            display: block;
-            color: #f1c40f;
-        }
-        
-        /* CONNECTION STATUS */
-        .status-box {
+        .status {
             background: #34495e;
-            padding: 10px;
-            border-radius: 50px;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        
-        .connected {
-            color: #2ecc71;
-        }
-        
-        .disconnected {
-            color: #e74c3c;
-        }
-        
-        /* MAIN MENU - Big Buttons for Mom */
-        .main-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .menu-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        .big-btn {
-            background: white;
-            border: none;
-            border-radius: 25px;
-            padding: 25px 10px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #2c3e50;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 5px solid;
-        }
-        
-        .big-btn:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .big-btn .icon {
-            font-size: 40px;
-        }
-        
-        .big-btn .tig-text {
-            font-size: 18px;
-        }
-        
-        .big-btn .small-text {
+            padding: 8px;
+            border-radius: 10px;
             font-size: 14px;
-            color: #7f8c8d;
+            margin-top: 10px;
+
         }
-        
-        /* Button Colors */
-        .btn-green { border-bottom-color: #27ae60; }
-        .btn-blue { border-bottom-color: #2980b9; }
-        .btn-orange { border-bottom-color: #e67e22; }
-        .btn-purple { border-bottom-color: #8e44ad; }
-        .btn-red { border-bottom-color: #c0392b; }
-        .btn-teal { border-bottom-color: #16a085; }
-        
-        /* QUICK STATS - Simple numbers */
-        .quick-stats {
-            background: white;
-            border-radius: 25px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-        }
-        
-        .stats-title {
-            font-size: 18px;
-            color: #7f8c8d;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .stats-grid {
+        .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            margin-bottom: 20px;
         }
-        
-        .stat-item {
-            text-align: center;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 20px;
-        }
-        
-        .stat-number {
-            font-size: 28px;
+        .menu-btn {
+            background: white;
+            border: none;
+
+            padding: 25px 10px;
+            border-radius: 15px;
+            font-size: 18px;
             font-weight: bold;
-            color: #2c3e50;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 4px solid;
         }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-        
-        /* SECTIONS / PAGES */
+        .menu-btn .icon { font-size: 30px; }
+        .btn-green { border-bottom-color: #27ae60; }
+        .btn-blue { border-bottom-color: #2980b9; }
+        .btn-orange { border-bottom-color: #e67e22; }
+
+        .btn-purple { border-bottom-color: #8e44ad; }        
+
         .section {
             display: none;
             background: white;
-            border-radius: 30px;
+            border-radius: 15px;
             padding: 20px;
             margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
         }
-        
-        .section.active {
-            display: block;
-        }
-        
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ecf0f1;
-        }
+        .section.active { display: block; }
         
         .back-btn {
             background: #ecf0f1;
             border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 15px;
-            font-size: 24px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
             cursor: pointer;
         }
         
-        .section-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-            flex: 1;
-        }
-        
-        /* FORM STYLES - Big and clear */
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        
+
         .form-group label {
             display: block;
-            font-size: 16px;
+            margin-bottom: 5px;
             font-weight: bold;
-            color: #34495e;
-            margin-bottom: 8px;
+
         }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 18px;
-            font-size: 18px;
-            border: 2px solid #bdc3c7;
-            border-radius: 15px;
-            background: #f8f9fa;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
         }
-        
-        .form-group input:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        
-        /* BIG BUTTONS for actions */
+
         .action-btn {
-            background: #3498db;
+            width: 100%;
+            padding: 15px;
+            background: #27ae60;
             color: white;
             border: none;
-            padding: 20px;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 15px;
-            width: 100%;
-            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 18px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin: 10px 0;
         }
-        
-        .action-btn.green { background: #27ae60; }
-        .action-btn.orange { background: #e67e22; }
-        .action-btn.red { background: #e74c3c; }
-        
-        /* ITEM CARDS - Clear list */
-        .items-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 20px 0;
-        }
-        
+
         .item-card {
             background: #f8f9fa;
-            border-radius: 20px;
-            padding: 18px;
-            border-left: 8px solid;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #27ae60;
         }
-        
-        .item-card.regular { border-left-color: #27ae60; }
-        .item-card.occasional { border-left-color: #e67e22; }
-        .item-card.paid { border-left-color: #95a5a6; opacity: 0.8; }
-        
+
         .item-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 8px;
-        }
-        
-        .item-details {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            font-size: 16px;
-            color: #34495e;
-        }
-        
-        .item-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        
-        .badge-regular { background: #27ae60; color: white; }
-        .badge-occasional { background: #e67e22; color: white; }
-        
-        .warning {
-            background: #fcf3cf;
-            color: #f39c12;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 16px;
-            margin: 10px 0;
-        }
-        
-        /* QUICK ACTIONS */
-        .quick-actions {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        .small-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            background: #ecf0f1;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        /* TABS */
-        .simple-tabs {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .simple-tab {
-            flex: 1;
-            padding: 15px;
-            background: #ecf0f1;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        .simple-tab.active {
-            background: #3498db;
-            color: white;
-        }
-        
-        /* MESSAGES */
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
             font-size: 18px;
-            margin: 15px 0;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-        
-        .helper-text {
+
+        .item-details {
+
             font-size: 14px;
-            color: #7f8c8d;
-            text-align: center;
-            margin-top: 20px;
+            color: #666;
         }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- SHOP HEADER - Always visible -->
-        <div class="shop-header">
-            <div class="shop-name">
-                🏪 ድኳን ናይ ኣደይ
-                <small>Mother's Shop</small>
-            </div>
-            <div class="status-box" id="connectionStatus">
-                ምስ ሰርቨር ይራኸብ ኣሎ...
-            </div>
+        <!-- Header -->
+        <div class="header">
+            <h1>🏪 ድኳን ናይ ኣደይ</h1>
+            <div class="status" id="connectionStatus">ምስ ሰርቨር ይራኸብ ኣሎ...</div>
         </div>
 
-        <!-- MAIN MENU (Home Page) -->
+        <!-- Main Menu (Home) -->
         <div id="homePage">
-            <!-- Quick Numbers -->
-            <div class="quick-stats">
-                <div class="stats-title">ሓፂር ሓበሬታ</div>
-                <div class="stats-grid" id="quickStats">
-                    <div class="stat-item">
-                        <div class="stat-number" id="statItems">0</div>
-                        <div class="stat-label">እተኸውን</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="statCredits">0</div>
-                        <div class="stat-label">ሽቁርቓር</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="statBottles">0</div>
-                        <div class="stat-label">ጥርሙዝ</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="statCustomers">0</div>
-                        <div class="stat-label">ዓሚልቲ</div>
-                    </div>
-                </div>
+            <div class="menu-grid">
+                <button class="menu-btn btn-green" onclick="showPage('inventory')">
+                    <span class="icon">📦</span>
+                    እተኸውን
+                </button>
+                <button class="menu-btn btn-blue" onclick="showPage('customers')">
+                    <span class="icon">👥</span>
+                    ዓሚልቲ
+                </button>
+                <button class="menu-btn btn-orange" onclick="showPage('credit')">
+                    <span class="icon">📝</span>
+                    ሽቁርቓር
+                </button>
+                <button class="menu-btn btn-purple" onclick="showPage('bottles')">
+                    <span class="icon">🍾</span>
+                    ጥርሙዝ
+                </button>
             </div>
-
-            <!-- BIG BUTTONS - Easy to tap -->
-            <div class="main-menu">
-                <div class="menu-row">
-                    <button class="big-btn btn-green" onclick="showSection('inventory')">
-                        <span class="icon">📦</span>
-                        <span class="tig-text">እተኸውን</span>
-                        <span class="small-text">ኣታዊ ዘሎ</span>
-                    </button>
-                    <button class="big-btn btn-blue" onclick="showSection('customers')">
-                        <span class="icon">👥</span>
-                        <span class="tig-text">ዓሚልቲ</span>
-                        <span class="small-text">ዝሽርቁ ሰባት</span>
-                    </button>
-                </div>
-                <div class="menu-row">
-                    <button class="big-btn btn-orange" onclick="showSection('credit')">
-                        <span class="icon">📝</span>
-                        <span class="tig-text">ሽቁርቓር</span>
-                        <span class="small-text">ገንዘብ ዝበደሉ</span>
-                    </button>
-                    <button class="big-btn btn-purple" onclick="showSection('bottles')">
-                        <span class="icon">🍾</span>
-                        <span class="tig-text">ጥርሙዝ</span>
-                        <span class="small-text">ክመለሱ ኣለዎም</span>
-                    </button>
-                </div>
-                <div class="menu-row">
-                    <button class="big-btn btn-teal" onclick="showSection('addItem')">
-                        <span class="icon">➕</span>
-                        <span class="tig-text">ሓድሽ እተኸውን</span>
-                        <span class="small-text">ዝገዛኽዎ ኣእትዉ</span>
-                    </button>
-                    <button class="big-btn btn-red" onclick="showSection('addCustomer')">
-                        <span class="icon">👤</span>
-                        <span class="tig-text">ሓድሽ ዓሚል</span>
-                        <span class="small-text">ሓድሽ ሰብ ኣእትዉ</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="helper-text">
-                👆 ንምክፋት ኣብ ላዕሊ ጠውቑ
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="action-btn" style="background: #3498db;" onclick="showPage('addItem')">➕ ሓድሽ እተኸውን</button>
+                <button class="action-btn" style="background: #9b59b6;" onclick="showPage('addCustomer')">👤 ሓድሽ ዓሚል</button>
             </div>
         </div>
 
-        <!-- ==================== INVENTORY PAGE ==================== -->
-        <div id="inventorySection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">📦 እተኸውን ዘሎ</div>
-                <button class="back-btn" onclick="loadInventory()">🔄</button>
-            </div>
-            
-            <div class="quick-actions">
-                <button class="small-btn" onclick="showSection('addItem')">➕ ሓድሽ</button>
-                <button class="small-btn" onclick="showSection('inventory')">🔄 ኣሓድስ</button>
-            </div>
-            
-            <div id="inventoryList" class="items-list">
-                <div class="warning">ይጽበዩ... እተኸውን ይመጽእ ኣሎ</div>
-            </div>
+        <!-- Inventory Page -->
+        <div id="inventoryPage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>📦 እተኸውን ዘሎ</h2>
+            <button class="action-btn" style="background: #3498db;" onclick="loadInventory()">🔄 ኣሓድስ</button>
+            <div id="inventoryList" class="warning">ይጽበዩ...</div>
         </div>
 
-        <!-- ==================== CUSTOMERS PAGE ==================== -->
-        <div id="customersSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">👥 ዓሚልቲ</div>
+        <!-- Customers Page -->
+        <div id="customersPage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>👥 ዓሚልቲ</h2>
+            <div style="display: flex; gap: 10px; margin: 10px 0;">
+                <button class="action-btn" style="background: #27ae60;" onclick="loadCustomers('regular')">ወትሩ</button>
+                <button class="action-btn" style="background: #e67e22;" onclick="loadCustomers('occasional')">ሓደ ግዜ</button>
             </div>
-            
-            <div class="simple-tabs">
-                <button class="simple-tab active" onclick="loadCustomers('regular')">ወትሩ</button>
-                <button class="simple-tab" onclick="loadCustomers('occasional')">ሓደ ግዜ</button>
-                <button class="simple-tab" onclick="loadCustomers('all')">ኩሎም</button>
-            </div>
-            
-            <div class="quick-actions">
-                <button class="small-btn" onclick="showSection('addCustomer')">➕ ሓድሽ ዓሚል</button>
-            </div>
-            
-            <div id="customersList" class="items-list">
-                <div class="warning">ይጽበዩ... ዓሚልቲ ይመጽኡ ኣለዉ</div>
-            </div>
+            <div id="customersList" class="warning">ይጽበዩ...</div>
         </div>
 
-        <!-- ==================== CREDIT PAGE ==================== -->
-        <div id="creditSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">📝 ሽቁርቓር</div>
-            </div>
-            
-            <div class="simple-tabs">
-                <button class="simple-tab active" onclick="loadCredits('unpaid')">ዘይተኸፈለ</button>
-                <button class="simple-tab" onclick="loadCredits('overdue')">ዝሓለፈ</button>
-                <button class="simple-tab" onclick="loadCredits('all')">ኩሉ</button>
-            </div>
-            
-            <div class="quick-actions">
-                <button class="small-btn" onclick="showSection('addCredit')">➕ ሓድሽ ሽቁርቓር</button>
-            </div>
-            
-            <div id="creditList" class="items-list">
-                <div class="warning">ይጽበዩ... ሽቁርቓር ይመጽእ ኣሎ</div>
-            </div>
+        <!-- Credit Page -->
+        <div id="creditPage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>📝 ሽቁርቓር</h2>
+            <button class="action-btn" style="background: #e67e22;" onclick="showPage('addCredit')">➕ ሓድሽ ሽቁርቓር</button>
+            <div id="creditList" class="warning">ይጽበዩ...</div>
         </div>
 
-        <!-- ==================== BOTTLES PAGE ==================== -->
-        <div id="bottlesSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">🍾 ጥርሙዝ ክመለሱ ዘለዎም</div>
-            </div>
-            
-            <div class="quick-actions">
-                <button class="small-btn" onclick="showSection('addBottle')">➕ ሓድሽ ጥርሙዝ</button>
-            </div>
-            
-            <div id="bottlesList" class="items-list">
-                <div class="warning">ይጽበዩ... ጥርሙዝ ይመጽእ ኣሎ</div>
-            </div>
+        <!-- Bottles Page -->
+        <div id="bottlesPage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>🍾 ጥርሙዝ</h2>
+            <button class="action-btn" style="background: #8e44ad;" onclick="showPage('addBottle')">➕ ሓድሽ</button>
+            <div id="bottlesList" class="warning">ይጽበዩ...</div>
         </div>
 
-        <!-- ==================== ADD ITEM PAGE ==================== -->
-        <div id="addItemSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">➕ ሓድሽ እተኸውን ኣእትዉ</div>
-            </div>
-            
-            <form id="addItemForm" onsubmit="event.preventDefault(); saveItem();">
+        <!-- Add Item Page -->
+        <div id="addItemPage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>➕ ሓድሽ እተኸውን</h2>
+            <form onsubmit="event.preventDefault(); saveItem();">
                 <div class="form-group">
                     <label>ሽም እተኸውን</label>
-                    <input type="text" id="itemName" placeholder="ንኣብነት: ኮካ ኮላ" required>
+                    <input type="text" id="itemName" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label>ዋጋ ዝገዛኽዎ (ብር)</label>
-                    <input type="number" id="buyingPrice" step="0.01" placeholder="80" required>
+                    <input type="number" id="buyingPrice" step="0.01" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label>ዋጋ ክትሸጥዎ (ብር)</label>
-                    <input type="number" id="sellingPrice" step="0.01" placeholder="100" required>
+                    <input type="number" id="sellingPrice" step="0.01" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label>ክንደይ ኣለካ?</label>
-                    <input type="number" id="stock" placeholder="24" required>
+                    <input type="number" id="stock" required>
                 </div>
-                
-                <button type="submit" class="action-btn green">
-                    💾 ኣሕጽር
-                </button>
+                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
             </form>
-            <div id="addItemMessage" style="display: none;" class="success-message"></div>
+            <div id="addItemMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
 
-        <!-- ==================== ADD CUSTOMER PAGE ==================== -->
-        <div id="addCustomerSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">➕ ሓድሽ ዓሚል ኣእትዉ</div>
-            </div>
-            
-            <form id="addCustomerForm" onsubmit="event.preventDefault(); saveCustomer();">
+        <!-- Add Customer Page -->
+        <div id="addCustomerPage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>➕ ሓድሽ ዓሚል</h2>
+            <form onsubmit="event.preventDefault(); saveCustomer();">
                 <div class="form-group">
                     <label>ሽም ዓሚል</label>
-                    <input type="text" id="customerName" placeholder="ሽም" required>
+                    <input type="text" id="customerName" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label>ቁጽሪ ተሌፎን</label>
-                    <input type="tel" id="customerPhone" placeholder="09...">
+                    <input type="tel" id="customerPhone">
                 </div>
-                
+
                 <div class="form-group">
                     <label>ዓይነት ዓሚል</label>
                     <select id="customerType">
-                        <option value="regular">ወትሩ ዝሽርቕ (ኣዘውቲሩ ይመጽእ)</option>
-                        <option value="occasional">ሓደ ግዜ ዝሽርቕ (ልክዕ ዘይፈልጥ)</option>
+                        <option value="regular">ወትሩ ዝሽርቕ</option>
+                        <option value="occasional">ሓደ ግዜ ዝሽርቕ</option>
                     </select>
                 </div>
-                
-                <button type="submit" class="action-btn green">
-                    💾 ኣሕጽር
-                </button>
+                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
             </form>
-            <div id="addCustomerMessage" style="display: none;" class="success-message"></div>
+            <div id="addCustomerMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
 
-        <!-- ==================== ADD CREDIT PAGE ==================== -->
-        <div id="addCreditSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">➕ ሓድሽ ሽቁርቓር ኣእትዉ</div>
-            </div>
-            
-            <form id="addCreditForm" onsubmit="event.preventDefault(); saveCredit();">
+        <!-- Add Credit Page -->
+        <div id="addCreditPage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>➕ ሓድሽ ሽቁርቓር</h2>
+            <form onsubmit="event.preventDefault(); saveCredit();">
                 <div class="form-group">
                     <label>መረፅ ዓሚል</label>
                     <select id="creditCustomer" required>
-                        <option value="">ዓሚል መረፅ...</option>
+                        <option value="">ምረፅ...</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label>እንታይ እዩ ዝወሰደ?</label>
-                    <input type="text" id="creditItem" placeholder="ንኣብነት: ሽኮር" required>
+                    <input type="text" id="creditItem" required>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>ክንደይ እዩ ዋጋኡ? (ብር)</label>
-                    <input type="number" id="creditAmount" step="0.01" placeholder="500" required>
+                    <label>ክንደይ ብር?</label>
+                    <input type="number" id="creditAmount" step="0.01" required>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>መወዳእታ ግዜ (ክሳብ መዓስ ክኸፍል?)</label>
+                    <label>ክሳብ መዓስ ክኸፍል?</label>
+
                     <input type="date" id="dueDate">
-                    <small>እንተዘይኣተዉካዮ፡ ፪ ወርሒ ይህብ</small>
-                </div>
                 
-                <button type="submit" class="action-btn orange">
-                    💾 ኣሕጽር
-                </button>
+                </div>
+
+                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
             </form>
-            <div id="addCreditMessage" style="display: none;" class="success-message"></div>
+            <div id="addCreditMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
 
-        <!-- ==================== ADD BOTTLE PAGE ==================== -->
-        <div id="addBottleSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">➕ ጥርሙዝ ዝወሰደ ኣእትዉ</div>
-            </div>
-            
-            <form id="addBottleForm" onsubmit="event.preventDefault(); saveBottle();">
+        <!-- Add Bottle Page -->
+        <div id="addBottlePage" class="section">
+            <button class="back-btn" onclick="goHome()">← ተመለስ</button>
+            <h2>➕ ጥርሙዝ ዝወሰደ</h2>
+            <form onsubmit="event.preventDefault(); saveBottle();">
                 <div class="form-group">
                     <label>ሽም ዓሚል</label>
-                    <input type="text" id="bottleCustomer" placeholder="ሽም ዝወሰደ" required>
+                    <input type="text" id="bottleCustomer" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label>ዓይነት ጥርሙዝ</label>
+
                     <select id="bottleType">
+                    
                         <option value="ቢራ">ቢራ</option>
-                        <option value="ፔፕሲ">ፔፕሲ/ኮካኮላ</option>
+                    
                         <option value="ማይ">ማይ</option>
+                    
                         <option value="ካልእ">ካልእ</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label>ክንደይ ጥርሙዝ?</label>
                     <input type="number" id="bottleQuantity" value="1">
                 </div>
-                
-                <div class="form-group">
-                    <label>መደብ ገንዘብ (እንተሃለዎ)</label>
-                    <input type="number" id="depositAmount" step="0.01" placeholder="50">
-                </div>
-                
-                <button type="submit" class="action-btn purple">
-                    💾 ኣሕጽር
-                </button>
+                <button type="submit" class="action-btn">💾 ኣሕጽር</button>
             </form>
-            <div id="addBottleMessage" style="display: none;" class="success-message"></div>
-        </div>
-
-        <!-- ==================== PAYMENT REMINDER ==================== -->
-        <div id="paymentSection" class="section">
-            <div class="section-header">
-                <button class="back-btn" onclick="goHome()">←</button>
-                <div class="section-title">💰 ክፍሊት</div>
-            </div>
-            
-            <div id="paymentList" class="items-list">
-                <!-- Payment items will load here -->
-            </div>
+            <div id="addBottleMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
     </div>
 
     <script>
         // 🔧 CHANGE THIS TO YOUR RENDER URL
         const API_URL = 'https://family-shop-api.onrender.com/api';
-        
-        // Track current view
-        let currentCustomerType = 'regular';
-        let currentCreditType = 'unpaid';
-        
-        // ========== NAVIGATION ==========
+
+        // Page navigation
         function goHome() {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById('homePage').style.display = 'block';
-            loadQuickStats();
+            checkConnection();
         }
-        
-        function showSection(section) {
+
+        function showPage(page) {
             document.getElementById('homePage').style.display = 'none';
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             
-            switch(section) {
-                case 'inventory':
-                    document.getElementById('inventorySection').classList.add('active');
-                    loadInventory();
-                    break;
-                case 'customers':
-                    document.getElementById('customersSection').classList.add('active');
-                    loadCustomers('regular');
-                    break;
-                case 'credit':
-                    document.getElementById('creditSection').classList.add('active');
-                    loadCredits('unpaid');
-                    break;
-                case 'bottles':
-                    document.getElementById('bottlesSection').classList.add('active');
-                    loadBottles();
-                    break;
-                case 'addItem':
-                    document.getElementById('addItemSection').classList.add('active');
-                    break;
-                case 'addCustomer':
-                    document.getElementById('addCustomerSection').classList.add('active');
-                    break;
-                case 'addCredit':
-                    document.getElementById('addCreditSection').classList.add('active');
-                    loadCustomerDropdown();
-                    break;
-                case 'addBottle':
-                    document.getElementById('addBottleSection').classList.add('active');
-                    break;
-            }
+            const pageId = page + 'Page';
+            document.getElementById(pageId).classList.add('active');
+            
+            // Load data based on page
+            if (page === 'inventory') loadInventory();
+            if (page === 'customers') loadCustomers('regular');
+            if (page === 'credit') loadCredits();
+            if (page === 'bottles') loadBottles();
+            if (page === 'addCredit') loadCustomerDropdown();
         }
-        
-        // ========== CHECK CONNECTION ==========
+
+        // Check connection
         async function checkConnection() {
             try {
-                const response = await fetch(`${API_URL}/stats`);
+                const response = await fetch(API_URL + '/stats');
                 if (response.ok) {
-                    document.getElementById('connectionStatus').innerHTML = 
-                        '✅ ምስ ሰርቨር ተራኺቡ';
+                    document.getElementById('connectionStatus').innerHTML = '✅ ተራኺቡ';
                 } else {
-                    document.getElementById('connectionStatus').innerHTML = 
-                        '⚠️ ሰርቨር ሓላፍ ኣለዉ';
+                    document.getElementById('connectionStatus').innerHTML = '⚠️ ሓላፍ';
                 }
             } catch (error) {
-                document.getElementById('connectionStatus').innerHTML = 
-                    '❌ ምስ ሰርቨር ኣይተራኸበን';
+                document.getElementById('connectionStatus').innerHTML = '❌ ኣይተራኸበን';
             }
         }
-        
-        // ========== QUICK STATS ==========
-        async function loadQuickStats() {
-            try {
-                const response = await fetch(`${API_URL}/stats`);
-                const stats = await response.json();
-                
-                document.getElementById('statItems').textContent = stats.total_items || 0;
-                document.getElementById('statCustomers').textContent = stats.total_customers || 0;
-                document.getElementById('statCredits').textContent = stats.pending_credits || 0;
-                document.getElementById('statBottles').textContent = stats.pending_bottles || 0;
-            } catch (error) {
-                console.log('Stats error:', error);
-            }
-        }
-        
-        // ========== INVENTORY ==========
+
+        // Load inventory
         async function loadInventory() {
-            const listDiv = document.getElementById('inventoryList');
-            listDiv.innerHTML = '<div class="warning">ይጽበዩ...</div>';
+            const list = document.getElementById('inventoryList');
+            list.innerHTML = 'ይጽበዩ...';
+            list.className = 'warning';
             
             try {
-                const response = await fetch(`${API_URL}/items`);
+                const response = await fetch(API_URL + '/items');
                 const items = await response.json();
                 
                 if (items.length === 0) {
-                    listDiv.innerHTML = '<div class="warning">እተኸውን የለን</div>';
+                    list.innerHTML = 'እተኸውን የለን';
                     return;
                 }
                 
-                listDiv.innerHTML = items.map(item => `
-                    <div class="item-card">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-details">
-                            <div>💰 ገዛኽዎ: ${item.buying_price} ብር</div>
-                            <div>💵 ክትሸጥ: ${item.selling_price} ብር</div>
-                            <div>📦 ዘሎካ: ${item.stock}</div>
-                            <div>📁 ${item.category || 'ካልእ'}</div>
+                let html = '';
+                items.forEach(item => {
+                    html += `
+                        <div class="item-card">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-details">
+                                <div>💰 ገዛኽዎ: ${item.buying_price} ብር</div>
+                                <div>💵 ክትሸጥ: ${item.selling_price} ብር</div>
+                                <div>📦 ዘሎካ: ${item.stock}</div>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
-                
+                    `;
+                });
+                list.innerHTML = html;
+                list.className = '';
             } catch (error) {
-                listDiv.innerHTML = '<div class="warning">ጌጋ: ክመጽእ ኣይከኣለን</div>';
+                list.innerHTML = 'ጌጋ: ' + error.message;
             }
         }
-        
-        // ========== CUSTOMERS ==========
+
+        // Load customers
         async function loadCustomers(type) {
-            currentCustomerType = type;
-            
-            // Update tabs
-            document.querySelectorAll('#customersSection .simple-tab').forEach(t => t.classList.remove('active'));
-            event?.target.classList.add('active');
-            
-            const listDiv = document.getElementById('customersList');
-            listDiv.innerHTML = '<div class="warning">ይጽበዩ...</div>';
+            const list = document.getElementById('customersList');
+            list.innerHTML = 'ይጽበዩ...';
             
             try {
-                const response = await fetch(`${API_URL}/customers`);
+                const response = await fetch(API_URL + '/customers');
                 let customers = await response.json();
-                
-                // Filter by type
+
                 if (type !== 'all') {
                     customers = customers.filter(c => c.customer_type === type);
                 }
                 
                 if (customers.length === 0) {
-                    listDiv.innerHTML = '<div class="warning">ዓሚልቲ የለዉን</div>';
+                    list.innerHTML = 'ዓሚልቲ የለዉን';
                     return;
                 }
                 
-                listDiv.innerHTML = customers.map(customer => `
-                    <div class="item-card ${customer.customer_type}">
-                        <div class="item-name">
-                            ${customer.name}
-                            <span class="item-badge ${customer.customer_type === 'regular' ? 'badge-regular' : 'badge-occasional'}">
-                                ${customer.customer_type === 'regular' ? 'ወትሩ' : 'ሓደ ግዜ'}
-                            </span>
+                let html = '';
+                customers.forEach(c => {
+                    html += `
+                        <div class="item-card">
+                            <div class="item-name">${c.name}</div>
+                            <div class="item-details">
+                                <div>📞 ${c.phone || 'የለን'}</div>
+                                <div>💰 ${c.total_credit || 0} ብር</div>
+                            </div>
                         </div>
-                        <div class="item-details">
-                            <div>📞 ${customer.phone || 'የለን'}</div>
-                            <div>💰 ሽቁርቓር: ${customer.total_credit || 0} ብር</div>
-                        </div>
-                    </div>
-                `).join('');
-                
+                    `;
+                });
+                list.innerHTML = html;
             } catch (error) {
-                listDiv.innerHTML = '<div class="warning">ጌጋ: ክመጽኡ ኣይከኣለን</div>';
+                list.innerHTML = 'ጌጋ: ' + error.message;
             }
         }
-        
-        // ========== CREDITS ==========
-        async function loadCredits(type) {
-            currentCreditType = type;
-    `;
-                // Update tabs
-            document.querySelectorAll('#creditSection .simple-tab').forEach(t => t.classList.remove('active'));
-            event?.target.classList.add('active');
-            
-            const listDiv = document.getElementById('creditList');
-            listDiv.innerHTML = '<div class="warning">ይጽበዩ...</div>';
+
+        // Load credits
+        async function loadCredits() {
+            const list = document.getElementById('creditList');
+            list.innerHTML = 'ይጽበዩ...';
             
             try {
-                const response = await fetch(`${API_URL}/credits`);
-                let credits = await response.json();
+                const response = await fetch(API_URL + '/credits');
+                const credits = await response.json();
+                const unpaid = credits.filter(c => !c.paid);
                 
-                // Filter by type
-                const today = new Date();
-                if (type === 'unpaid') {
-                    credits = credits.filter(c => !c.paid);
-                } else if (type === 'overdue') {
-                    credits = credits.filter(c => {
-                        if (c.paid) return false;
-                        if (!c.due_date) return false;
-                        return new Date(c.due_date) < today;
-                    });
-                }
-                
-                if (credits.length === 0) {
-                    listDiv.innerHTML = '<div class="warning">ሽቁርቓር የለን</div>';
+                if (unpaid.length === 0) {
+                    list.innerHTML = 'ሽቁርቓር የለን';
                     return;
                 }
                 
-                listDiv.innerHTML = credits.map(credit => {
-                    const dueDate = credit.due_date ? new Date(credit.due_date) : null;
-                    const isOverdue = dueDate && dueDate < today && !credit.paid;
-                    
-                    return `
-                    <div class="item-card ${credit.paid ? 'paid' : isOverdue ? 'occasional' : 'regular'}">
-                        <div class="item-name">
-                            ${credit.customer_name || 'ዘይፍለጥ'}
-                            ${!credit.paid ? '<span style="color:#e74c3c; font-size:14px;">⏰ ገና ኣይከፈለን</span>' : ''}
+                let html = '';
+                unpaid.forEach(c => {
+                    html += `
+                        <div class="item-card">
+                            <div class="item-name">${c.customer_name || 'ዘይፍለጥ'}</div>
+                            <div class="item-details">
+                                <div>📦 ${c.item_name}</div>
+                                <div>💰 ${c.amount} ብር</div>
+                            </div>
+                            <button onclick="markAsPaid(${c.id})" style="margin-top:10px; padding:5px 10px;">✓ ከፊሉ</button>
                         </div>
-                        <div class="item-details">
-                            <div>📦 ${credit.item_name}</div>
-                            <div>💰 ${credit.amount} ብር</div>
-                            <div>📅 ዝተወሰደሉ: ${new Date(credit.transaction_date).toLocaleDateString()}</div>
-                            ${dueDate ? `<div>⏳ ክኸፍል: ${dueDate.toLocaleDateString()}</div>` : ''}
-                        </div>
-                        ${!credit.paid ? `
-                        <button class="small-btn" style="margin-top:10px; background:#27ae60; color:white;" 
-                                onclick="markAsPaid(${credit.id})">
-                            ✓ ከፊሉ ምልክት ግበር
-                        </button>
-                        ` : '<p style="color:#27ae60; margin-top:10px;">✅ ተኸፊሉ</p>'}
-                    </div>
-                `}).join('');
-                
+                    `;
+                });
+                list.innerHTML = html;
             } catch (error) {
-                listDiv.innerHTML = '<div class="warning">ጌጋ: ክመጽእ ኣይከኣለን</div>';
+                list.innerHTML = 'ጌጋ: ' + error.message;
             }
         }
-        
-        // ========== BOTTLES ==========
+
+        // Load bottles
         async function loadBottles() {
-            const listDiv = document.getElementById('bottlesList');
-            listDiv.innerHTML = '<div class="warning">ይጽበዩ...</div>';
+            const list = document.getElementById('bottlesList');
+            list.innerHTML = 'ይጽበዩ...';
             
             try {
-                const response = await fetch(`${API_URL}/bottles`);
+                const response = await fetch(API_URL + '/bottles');
                 const bottles = await response.json();
+                const pending = bottles.filter(b => !b.returned);
                 
-                if (bottles.length === 0) {
-                    listDiv.innerHTML = '<div class="warning">ጥርሙዝ ዝወሰደ የለን</div>';
+                if (pending.length === 0) {
+                    list.innerHTML = 'ጥርሙዝ ዝወሰደ የለን';
                     return;
                 }
                 
-                listDiv.innerHTML = bottles.map(bottle => `
-                    <div class="item-card">
-                        <div class="item-name">${bottle.customer_name || bottle.notes?.replace('Customer: ', '') || 'ዘይፍለጥ'}</div>
-                        <div class="item-details">
-                            <div>🍾 ${bottle.bottle_type}</div>
-                            <div>🔢 ${bottle.quantity} ጥርሙዝ</div>
-                            <div>📅 ዝተወሰደሉ: ${new Date(bottle.taken_date).toLocaleDateString()}</div>
-                            ${bottle.deposit_amount ? `<div>💰 መደብ: ${bottle.deposit_amount} ብር</div>` : ''}
+                let html = '';
+                pending.forEach(b => {
+                    html += `
+                        <div class="item-card">
+                            <div class="item-name">${b.notes?.replace('Customer: ', '') || 'ዘይፍለጥ'}</div>
+                            <div class="item-details">
+                                <div>🍾 ${b.bottle_type}</div>
+                                <div>🔢 ${b.quantity}</div>
+                            </div>
+                            <button onclick="returnBottle(${b.id})" style="margin-top:10px; padding:5px 10px;">🔄 ተመሊሱ</button>
                         </div>
-                        ${!bottle.returned ? `
-                        <button class="small-btn" style="margin-top:10px; background:#3498db; color:white;" 
-                                onclick="returnBottle(${bottle.id})">
-                            🔄 ተመሊሱ ምልክት ግበር
-                        </button>
-                        ` : '<p style="color:#27ae60; margin-top:10px;">✅ ተመሊሱ</p>'}
-                    </div>
-                `).join('');
-                
+                    `;
+                });
+                list.innerHTML = html;
             } catch (error) {
-                listDiv.innerHTML = '<div class="warning">ጌጋ: ክመጽእ ኣይከኣለን</div>';
+                list.innerHTML = 'ጌጋ: ' + error.message;
             }
         }
-        
-        // ========== SAVE ITEM ==========
+
+        // Load customer dropdown
+        async function loadCustomerDropdown() {
+            try {
+                const response = await fetch(API_URL + '/customers');
+                const customers = await response.json();
+                
+                const select = document.getElementById('creditCustomer');
+                select.innerHTML = '<option value="">ምረፅ...</option>';
+                
+                customers.forEach(c => {
+                    select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                });
+            } catch (error) {
+                console.log('Dropdown error:', error);
+            }
+        }
+
+        // Save item
         async function saveItem() {
-            const itemData = {
+            const item = {
                 name: document.getElementById('itemName').value,
                 buying_price: parseFloat(document.getElementById('buyingPrice').value),
                 selling_price: parseFloat(document.getElementById('sellingPrice').value),
-                stock: parseInt(document.getElementById('stock').value),
-                category: 'ካልእ'
+                stock: parseInt(document.getElementById('stock').value)
             };
             
             try {
-                const response = await fetch(`${API_URL}/items`, {
+                const response = await fetch(API_URL + '/items', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(itemData)
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(item)
                 });
                 
                 if (response.ok) {
                     const msg = document.getElementById('addItemMessage');
-                    msg.textContent = '✅ እተኸውን ተወዲቑ!';
+                    msg.innerHTML = '✅ ተወዲቑ!';
                     msg.style.display = 'block';
-                    
-                    // Clear form
                     document.getElementById('itemName').value = '';
                     document.getElementById('buyingPrice').value = '';
                     document.getElementById('sellingPrice').value = '';
@@ -982,26 +577,26 @@
                 alert('ሽጋራ: ' + error.message);
             }
         }
-        
-        // ========== SAVE CUSTOMER ==========
+
+        // Save customer
         async function saveCustomer() {
-            const customerData = {
+            const customer = {
                 name: document.getElementById('customerName').value,
                 phone: document.getElementById('customerPhone').value || null,
-                address: '',
+
                 customer_type: document.getElementById('customerType').value
             };
             
             try {
-                const response = await fetch(`${API_URL}/customers`, {
+                const response = await fetch(API_URL + '/customers', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(customerData)
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(customer)
                 });
                 
                 if (response.ok) {
                     const msg = document.getElementById('addCustomerMessage');
-                    msg.textContent = '✅ ዓሚል ተወዲቑ!';
+                    msg.innerHTML = '✅ ተወዲቑ!';
                     msg.style.display = 'block';
                     
                     document.getElementById('customerName').value = '';
@@ -1016,62 +611,33 @@
                 alert('ሽጋራ: ' + error.message);
             }
         }
-        
-        // ========== LOAD CUSTOMER DROPDOWN ==========
-        async function loadCustomerDropdown() {
-            try {
-                const response = await fetch(`${API_URL}/customers`);
-                const customers = await response.json();
-                
-                const select = document.getElementById('creditCustomer');
-                select.innerHTML = '<option value="">መረፅ ዓሚል...</option>';
-                
-                customers.forEach(c => {
-                    const option = document.createElement('option');
-                    option.value = c.id;
-                    option.textContent = `${c.name} (${c.customer_type === 'regular' ? 'ወትሩ' : 'ሓደ ግዜ'})`;
-                    select.appendChild(option);
-                });
-            } catch (error) {
-                console.log('Dropdown error:', error);
-            }
-        }
-        
-        // ========== SAVE CREDIT ==========
+
+        // Save credit
         async function saveCredit() {
             const customerId = document.getElementById('creditCustomer').value;
             if (!customerId) {
-                alert('ኣንፈት ዓሚል መረፅ!');
+                alert('ዓሚል ምረፅ!');
                 return;
             }
             
-            // If no due date, set to 2 months from now
-            let dueDate = document.getElementById('dueDate').value;
-            if (!dueDate) {
-                const date = new Date();
-                date.setMonth(date.getMonth() + 2);
-                dueDate = date.toISOString().split('T')[0];
-            }
-            
-            const creditData = {
+            const credit = {
                 customer_id: customerId,
                 item_name: document.getElementById('creditItem').value,
-                quantity: 1,
+
                 amount: parseFloat(document.getElementById('creditAmount').value),
-                due_date: dueDate,
-                notes: ''
+                due_date: document.getElementById('dueDate').value || null
             };
             
             try {
-                const response = await fetch(`${API_URL}/credits`, {
+                const response = await fetch(API_URL + '/credits', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(creditData)
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(credit)
                 });
                 
                 if (response.ok) {
                     const msg = document.getElementById('addCreditMessage');
-                    msg.textContent = '✅ ሽቁርቓር ተወዲቑ!';
+                    msg.innerHTML = '✅ ተወዲቑ!';
                     msg.style.display = 'block';
                     
                     document.getElementById('creditItem').value = '';
@@ -1087,50 +653,29 @@
                 alert('ሽጋራ: ' + error.message);
             }
         }
-        
-        // ========== SAVE BOTTLE ==========
+
+        // Save bottle
         async function saveBottle() {
-            // For now, create a temporary customer
-            const customerName = document.getElementById('bottleCustomer').value;
-            
-            // First create customer
-            const customerResponse = await fetch(`${API_URL}/customers`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: customerName,
-                    phone: '',
-                    address: '',
-                    customer_type: 'occasional'
-                })
-            });
-            
-            const customer = await customerResponse.json();
-            
-            const bottleData = {
-                customer_id: customer.id,
+            const bottle = {
+                customer_id: 1,  // Temporary
                 bottle_type: document.getElementById('bottleType').value,
                 quantity: parseInt(document.getElementById('bottleQuantity').value) || 1,
-                deposit_amount: parseFloat(document.getElementById('depositAmount').value) || 0,
-                notes: `Customer: ${customerName}`
+                notes: 'Customer: ' + document.getElementById('bottleCustomer').value
             };
             
             try {
-                const response = await fetch(`${API_URL}/bottles`, {
+                const response = await fetch(API_URL + '/bottles', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bottleData)
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(bottle)
                 });
                 
                 if (response.ok) {
                     const msg = document.getElementById('addBottleMessage');
-                    msg.textContent = '✅ ጥርሙዝ ተወዲቑ!';
-                    msg.style.display = 'block';
-                    
+                    msg.innerHTML = '✅ ተወዲቑ!';
+                    msg.style.display = 'block';                   
                     document.getElementById('bottleCustomer').value = '';
-                    document.getElementById('bottleQuantity').value = '1';
-                    document.getElementById('depositAmount').value = '';
-                    
+                    document.getElementById('bottleQuantity').value = '1';                    
                     setTimeout(() => {
                         msg.style.display = 'none';
                         goHome();
@@ -1140,50 +685,36 @@
                 alert('ሽጋራ: ' + error.message);
             }
         }
-        
-        // ========== MARK AS PAID ==========
+
+        // Mark as paid
         async function markAsPaid(creditId) {
-            if (!confirm('እዚ ሰብ ከፊሉ እዩ?')) return;
+            if (!confirm('ከፊሉ እዩ?')) return;
             
             try {
-                const response = await fetch(`${API_URL}/credits/${creditId}/pay`, {
-                    method: 'PUT'
-                });
-                
-                if (response.ok) {
-                    alert('✅ ተኸፊሉ ምልክት ተገይሩ!');
-                    loadCredits(currentCreditType);
-                    loadQuickStats();
-                }
+                await fetch(API_URL + '/credits/' + creditId + '/pay', {method: 'PUT'});
+                alert('✅ ተኸፊሉ');
+                loadCredits();
             } catch (error) {
                 alert('ሽጋራ: ' + error.message);
             }
         }
-        
-        // ========== RETURN BOTTLE ==========
+
+        // Return bottle
         async function returnBottle(bottleId) {
-            if (!confirm('እዚ ጥርሙዝ ተመሊሱ እዩ?')) return;
+            if (!confirm('ተመሊሱ እዩ?')) return;
             
             try {
-                const response = await fetch(`${API_URL}/bottles/${bottleId}/return`, {
-                    method: 'PUT'
-                });
-                
-                if (response.ok) {
-                    alert('✅ ተመሊሱ ምልክት ተገይሩ!');
-                    loadBottles();
-                    loadQuickStats();
-                }
+                await fetch(API_URL + '/bottles/' + bottleId + '/return', {method: 'PUT'});
+                alert('✅ ተመሊሱ');
+                loadBottles();
             } catch (error) {
                 alert('ሽጋራ: ' + error.message);
             }
         }
-        
-        // ========== INIT ==========
+
+        // Start
         window.onload = function() {
-            checkConnection();
-            loadQuickStats();
-            document.getElementById('homePage').style.display = 'block';
+            goHome();
         };
     </script>
 </body>

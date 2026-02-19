@@ -101,6 +101,64 @@
             background: #fff0f0;
         }
 
+        .simple-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .simple-tab {
+            flex: 1;
+            padding: 12px;
+            background: #ecf0f1;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .simple-tab.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+
+
         .small-btn {
             padding: 8px 15px;
             border: none;
@@ -227,6 +285,7 @@
             <div id="customersList" class="warning">ይፀበዩ...</div>
         </div>
 
+        <!-- Credit Page -->
         <!-- Credit Page -->
         <div id="creditPage" class="section">
             <button class="back-btn" onclick="goHome()">← ተመለስ</button>
@@ -565,11 +624,24 @@
                 let html = '';
                 customers.forEach(c => {
                     html += `
-                        <div class="item-card">
-                            <div class="item-name">${c.name}</div>
+                        <div class="item-card ${c.customer_type}" onclick="viewCustomerDetail(${c.id})" style="cursor: pointer;">
+                            <div class="item-name">
+                                ${c.name}
+                                <span style="
+                                    display: inline-block;
+                                    padding: 3px 8px;
+                                    border-radius: 12px;
+                                    font-size: 12px;
+                                    background: ${c.customer_type === 'regular' ? '#27ae60' : '#e67e22'};
+                                    color: white;
+                                    margin-left: 8px;
+                                ">
+                                    ${c.customer_type === 'regular' ? 'ወትሩ' : 'ሓደ ግዜ'}
+                                </span>
+                            </div>
                             <div class="item-details">
                                 <div>📞 ${c.phone || 'የለን'}</div>
-                                <div>💰 ${c.total_credit || 0} ብር</div>
+                                <div>💰 ልቓሕ: ${c.total_credit || 0} ብር</div>
                             </div>
                         </div>
                     `;

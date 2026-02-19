@@ -223,6 +223,7 @@
                 <button class="action-btn" style="background: #27ae60;" onclick="loadCustomers('regular')">ወትሩ</button>
                 <button class="action-btn" style="background: #e67e22;" onclick="loadCustomers('occasional')">ሓደ ግዜ</button>
             </div>
+
             <div id="customersList" class="warning">ይፀበዩ...</div>
         </div>
 
@@ -375,6 +376,97 @@
             </form>
             <div id="addBottleMessage" style="display:none; background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-top:10px;"></div>
         </div>
+
+        <!-- Customer Detail Page -->
+        <div id="customerDetailPage" class="section">
+            <div class="section-header">
+                <button class="back-btn" onclick="goToCustomers()">←</button>
+                <div class="section-title" id="customerDetailName">👤 ዝርዝሪ ዓሚል</div>
+            </div>
+            
+            <!-- Customer Summary Card -->
+            <div class="item-card" style="background: #2c3e50; color: white; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 id="detailCustomerName" style="color: white; margin-bottom: 5px;">ስም</h3>
+                        <p id="detailCustomerPhone" style="color: #ecf0f1;">📞 ቁጽሪ ተሌፎን</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; font-weight: bold;" id="detailTotalOwed">0</div>
+                        <div style="font-size: 12px;">ጠቕላላ ሽቁርቓር</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Stats -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+                <div class="stat-item" style="background: #f8f9fa; padding: 10px; border-radius: 10px; text-align: center;">
+                    <div class="stat-number" id="detailTotalCredits">0</div>
+                    <div class="stat-label">ጠቕላላ ሽያጭ</div>
+                </div>
+                <div class="stat-item" style="background: #f8f9fa; padding: 10px; border-radius: 10px; text-align: center;">
+                    <div class="stat-number" id="detailPaidCount">0</div>
+                    <div class="stat-label">ዝተኸፈለ</div>
+                </div>
+                <div class="stat-item" style="background: #f8f9fa; padding: 10px; border-radius: 10px; text-align: center;">
+                    <div class="stat-number" id="detailUnpaidCount">0</div>
+                    <div class="stat-label">ዘይተኸፈለ</div>
+                </div>
+            </div>
+            
+            <!-- Tabs for this customer -->
+            <div class="simple-tabs" style="margin-bottom: 15px;">
+                <button class="simple-tab active" onclick="loadCustomerCredits('all')">📋 ኩሉ</button>
+                <button class="simple-tab" onclick="loadCustomerCredits('unpaid')">📝 ዘይተኸፈለ</button>
+                <button class="simple-tab" onclick="loadCustomerCredits('paid')">✅ ዝተኸፈለ</button>
+            </div>
+            
+            <!-- Customer's Credit List -->
+            <div id="customerCreditList" class="items-list">
+                <div class="warning">ይጽበዩ...</div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                <button class="action-btn" style="background: #e67e22;" onclick="showPage('addCreditForCurrentCustomer')">
+                    ➕ ሓድሽ ሽቁርቓር
+                </button>
+                <button class="action-btn" style="background: #3498db;" onclick="sendCustomerReminder()">
+                    📱 ኣዘኻክር
+                </button>
+            </div>
+        </div>
+
+        <!-- Add Credit for Specific Customer Page -->
+        <div id="addCreditForCustomerPage" class="section">
+            <div class="section-header">
+                <button class="back-btn" onclick="goToCustomerDetail()">←</button>
+                <div class="section-title">➕ ሽቁርቓር ን <span id="addCreditCustomerName"></span></div>
+            </div>
+            
+            <form onsubmit="event.preventDefault(); saveCreditForCustomer();">
+                <div class="form-group">
+                    <label>እንታይ እዩ ዝወሰደ?</label>
+                    <input type="text" id="customerCreditItem" required placeholder="ንኣብነት: ሽኮር, ሩዝ...">
+                </div>
+                
+                <div class="form-group">
+                    <label>ክንደይ ብር?</label>
+                    <input type="number" id="customerCreditAmount" step="0.01" required placeholder="ብር">
+                </div>
+                
+                <div class="form-group">
+                    <label>ክሳብ መዓስ ክኸፍል?</label>
+                    <input type="date" id="customerDueDate">
+                    <small>እንተዘይኣተዉካዮ፡ ፪ ወርሒ ይህብ</small>
+                </div>
+                
+                <button type="submit" class="action-btn orange">💾 ኣሕጽር</button>
+            </form>
+            <div id="addCreditForCustomerMessage" style="display:none;" class="success-message"></div>
+        </div>
+
+
     </div>
 
     <script>
@@ -522,7 +614,7 @@
                 // 'all' shows everything
                 
                 if (credits.length === 0) {
-                    if (type === 'unpaid') listDiv.innerHTML = '<div class="warning">ሽቁርቓር የለን</div>';
+                    if (type === 'unpaid') listDiv.innerHTML = '<div class="warning">ልቓሕ የለን</div>';
                     else if (type === 'paid') listDiv.innerHTML = '<div class="warning">ገና ዝተኸፈለ የለን</div>';
                     else listDiv.innerHTML = '<div class="warning">ኩሉ ቦታ ባዶ እዩ</div>';
                     return;
@@ -810,6 +902,255 @@
                 alert('ሽጋራ: ' + error.message);
             }
         }
+
+        // Global variable to store current customer being viewed
+        let currentCustomer = null;
+
+        // Go to customer detail page
+        async function viewCustomerDetail(customerId) {
+            try {
+                // Fetch customer details
+                const response = await fetch(`${API_URL}/customers`);
+                const customers = await response.json();
+                currentCustomer = customers.find(c => c.id == customerId);
+                
+                if (!currentCustomer) {
+                    alert('ዓሚል ኣይተረኽበን');
+                    return;
+                }
+                
+                // Update header
+                document.getElementById('customerDetailName').innerHTML = `👤 ${currentCustomer.name}`;
+                document.getElementById('detailCustomerName').innerHTML = currentCustomer.name;
+                document.getElementById('detailCustomerPhone').innerHTML = `📞 ${currentCustomer.phone || 'የለን'}`;
+                
+                // Hide home, show detail page
+                document.getElementById('homePage').style.display = 'none';
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById('customerDetailPage').classList.add('active');
+                
+                // Load this customer's credits
+                await loadCustomerCredits('all');
+                
+            } catch (error) {
+                alert('ሽጋራ: ' + error.message);
+            }
+        }
+
+        // Load credits for current customer
+        async function loadCustomerCredits(filter = 'all') {
+            if (!currentCustomer) return;
+            
+            const listDiv = document.getElementById('customerCreditList');
+            listDiv.innerHTML = '<div class="warning">ይጽበዩ...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/credits`);
+                let allCredits = await response.json();
+                
+                // Filter for this customer
+                let credits = allCredits.filter(c => c.customer_id == currentCustomer.id);
+                
+                // Update stats
+                const totalCredits = credits.length;
+                const paidCredits = credits.filter(c => c.paid).length;
+                const unpaidCredits = credits.filter(c => !c.paid).length;
+                const totalOwed = credits.filter(c => !c.paid).reduce((sum, c) => sum + parseFloat(c.amount), 0);
+                
+                document.getElementById('detailTotalCredits').innerHTML = totalCredits;
+                document.getElementById('detailPaidCount').innerHTML = paidCredits;
+                document.getElementById('detailUnpaidCount').innerHTML = unpaidCredits;
+                document.getElementById('detailTotalOwed').innerHTML = 'ብር ' + totalOwed.toFixed(2);
+                
+                // Apply filter
+                if (filter === 'unpaid') {
+                    credits = credits.filter(c => !c.paid);
+                } else if (filter === 'paid') {
+                    credits = credits.filter(c => c.paid);
+                }
+                
+                if (credits.length === 0) {
+                    listDiv.innerHTML = '<div class="warning">ኣብዚ ክፋል ሽቁርቓር የለን</div>';
+                    return;
+                }
+                
+                // Sort by date (newest first)
+                credits.sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date));
+                
+                let html = '';
+                credits.forEach(credit => {
+                    const dueDate = credit.due_date ? new Date(credit.due_date) : null;
+                    const today = new Date();
+                    const isOverdue = dueDate && dueDate < today && !credit.paid;
+                    
+                    html += `
+                        <div class="item-card" style="border-left-color: ${credit.paid ? '#27ae60' : (isOverdue ? '#e74c3c' : '#f39c12')};">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div class="item-name">${credit.item_name}</div>
+                                <div style="font-weight: bold; color: ${credit.paid ? '#27ae60' : '#e67e22'};">
+                                    ${credit.paid ? '✅ ተኸፊሉ' : '⏳ ዘይተኸፈለ'}
+                                </div>
+                            </div>
+                            <div class="item-details">
+                                <div>💰 ${credit.amount} ብር</div>
+                                <div>📅 ዝተወሰደሉ: ${new Date(credit.transaction_date).toLocaleDateString()}</div>
+                                ${dueDate ? `<div>⏳ ክኸፍል: ${dueDate.toLocaleDateString()}</div>` : ''}
+                            </div>
+                            ${!credit.paid ? `
+                            <button class="small-btn" style="background:#27ae60; color:white; margin-top:10px;" 
+                                    onclick="markAsPaidFromDetail(${credit.id})">
+                                ✓ ከፊሉ ምልክት ግበር
+                            </button>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                
+                listDiv.innerHTML = html;
+                
+            } catch (error) {
+                listDiv.innerHTML = '<div class="warning">ጌጋ: ' + error.message + '</div>';
+            }
+        }
+
+        // Mark as paid from customer detail page
+        async function markAsPaidFromDetail(creditId) {
+            if (!confirm('እዚ ሰብ ከፊሉ እዩ?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/credits/${creditId}/pay`, {
+                    method: 'PUT'
+                });
+                
+                if (response.ok) {
+                    alert('✅ ተኸፊሉ ምልክት ተገይሩ!');
+                    // Reload current filter
+                    const activeTab = document.querySelector('#customerDetailPage .simple-tab.active');
+                    const filter = activeTab ? 
+                        (activeTab.textContent.includes('ዘይተኸፈለ') ? 'unpaid' : 
+                         activeTab.textContent.includes('ዝተኸፈለ') ? 'paid' : 'all') : 'all';
+                    await loadCustomerCredits(filter);
+                    
+                    // Also refresh customers list if needed
+                    if (document.getElementById('customersPage').classList.contains('active')) {
+                        loadCustomers('all');
+                    }
+                }
+            } catch (error) {
+                alert('ሽጋራ: ' + error.message);
+            }
+        }
+
+        // Go back to customers list
+        function goToCustomers() {
+            document.getElementById('customerDetailPage').classList.remove('active');
+            document.getElementById('customersPage').classList.add('active');
+            currentCustomer = null;
+        }
+
+        // Go back to customer detail from add credit page
+        function goToCustomerDetail() {
+            document.getElementById('addCreditForCustomerPage').classList.remove('active');
+            document.getElementById('customerDetailPage').classList.add('active');
+        }
+
+        // Show add credit for current customer
+        function showPage(page) {
+            if (page === 'addCreditForCurrentCustomer' && currentCustomer) {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById('addCreditForCustomerPage').classList.add('active');
+                document.getElementById('addCreditCustomerName').innerHTML = currentCustomer.name;
+            } else {
+                // Your existing showPage logic
+                document.getElementById('homePage').style.display = 'none';
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                
+                const pageId = page + 'Page';
+                if (document.getElementById(pageId)) {
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    if (page === 'inventory') loadInventory();
+                    if (page === 'customers') loadCustomers('regular');
+                    if (page === 'credit') loadCredits('unpaid');
+                    if (page === 'bottles') loadBottles();
+                    if (page === 'addCredit') loadCustomerDropdown();
+                }
+            }
+        }
+
+        // Save credit for specific customer
+        async function saveCreditForCustomer() {
+            if (!currentCustomer) return;
+            
+            // If no due date, set to 2 months from now
+            let dueDate = document.getElementById('customerDueDate').value;
+            if (!dueDate) {
+                const date = new Date();
+                date.setMonth(date.getMonth() + 2);
+                dueDate = date.toISOString().split('T')[0];
+            }
+            
+            const creditData = {
+                customer_id: currentCustomer.id,
+                item_name: document.getElementById('customerCreditItem').value,
+                quantity: 1,
+                amount: parseFloat(document.getElementById('customerCreditAmount').value),
+                due_date: dueDate,
+                notes: ''
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/credits`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(creditData)
+                });
+                
+                if (response.ok) {
+                    const msg = document.getElementById('addCreditForCustomerMessage');
+                    msg.innerHTML = '✅ ሽቁርቓር ተወዲቑ!';
+                    msg.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('customerCreditItem').value = '';
+                    document.getElementById('customerCreditAmount').value = '';
+                    document.getElementById('customerDueDate').value = '';
+                    
+                    setTimeout(() => {
+                        msg.style.display = 'none';
+                        goToCustomerDetail();
+                        loadCustomerCredits('all');
+                    }, 1500);
+                }
+            } catch (error) {
+                alert('ሽጋራ: ' + error.message);
+            }
+        }
+
+        // Send reminder (simulated)
+        function sendCustomerReminder() {
+            if (!currentCustomer) return;
+            alert(`📱 መዘኻኸሪ ተልእኩ ን ${currentCustomer.name}\n(ኣብ ሓቂ እንተኾይኑ፡ ናብ ተሌፎን ይልከኽ)`);
+        }
+
+        // Update customer cards to be clickable
+        // Find your loadCustomers function and update the customer card part to:
+        /*
+        <div class="item-card ${customer.customer_type}" onclick="viewCustomerDetail(${customer.id})" style="cursor: pointer;">
+            <div class="item-name">
+                ${customer.name}
+                <span class="item-badge ${customer.customer_type === 'regular' ? 'badge-regular' : 'badge-occasional'}">
+                    ${customer.customer_type === 'regular' ? 'ወትሩ' : 'ሓደ ግዜ'}
+                </span>
+            </div>
+            <div class="item-details">
+                <div>📞 ${customer.phone || 'የለን'}</div>
+                <div>💰 ሽቁርቓር: ${customer.total_credit || 0} ብር</div>
+                <div>📊 ${customer.transaction_count || 0} ግዜ ሽያጭ</div>
+            </div>
+        </div>
+        */
+
 
         // Start
         window.onload = function() {
